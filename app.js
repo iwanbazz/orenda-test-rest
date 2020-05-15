@@ -1,20 +1,51 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const bodyParser = require("body-parser");
+const express = require("express");
+const helmet = require("helmet");
+const http = require("http");
+const mapRoutes = require("express-routes-mapper");
+const cors = require("cors");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+require("dotenv").config();
 
-var app = express();
+const config = require("./config/");
+const dbService = require("./api/services/db.service");
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+const validatePolicy = require("./api/middleware/validatePolicy");
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+const environment = process.env.NODE_ENV;
 
-module.exports = app;
+const app = express();
+const server = http.Server(app);
+
+const mappedUserRoutes = mapRoutes(
+  config.userRoutes,
+  "api/controllers/",
+  validatePolicy().requiredHeaders
+);
+
+const DB = dbService(environment, config.migrate).start();
+
+app.use(cors());
+
+app.use(
+  helmet({
+    dnsPrefetchControl: false,
+    frameguard: false,
+    ieNoOpen: false,
+  })
+);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use("/api", mappedUserRoutes);
+
+server.listen(config.port, () => {
+  if (environment !== "production" && environment !== "development") {
+    console.error(
+      `NODE_ENV is set to ${environment}, but only production and development are valid.`
+    );
+    process.exit(1);
+  }
+  return DB;
+});

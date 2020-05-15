@@ -3,12 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "npm run nodemon",
+    "dev": "cross-env NODE_ENV=development node app.js",
+    "nodemon": "nodemon --exec npm run dev",
+    "production": "cross-env NODE_ENV=production node app.js"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
+    "core-js": "^2.6.11",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "express-routes-mapper": "^1.1.0",
+    "helmet": "^3.22.0",
+    "morgan": "~1.9.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.9"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "nodemon": "^2.0.4"
   }
 }
