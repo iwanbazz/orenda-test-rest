@@ -10,10 +10,10 @@ Clone this repo
 $ git clone https://github.com/iwanbazz/orenda-test-rest.git
 ```
 
-Install dependencies
+Cd into directory & Install dependencies
 
 ```sh
-$ npm install
+$ cd orenda-test-rest && npm install
 ```
 
 Set database connection
