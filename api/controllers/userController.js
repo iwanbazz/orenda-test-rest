@@ -7,18 +7,23 @@ const userController = () => {
   const register = async (req, res) => {
     const { Users } = req.body;
 
-    let data = await Users.map((user) => ({ user }));
     try {
-      let insert = await userModel.bulkCreate(data);
-      return res.status(204).json(insert);
-    } catch (err) {
-      if (err.errors) {
-        console.log(err);
-        return res.status(400).json({ error: err.errors });
-      } else {
-        console.log(err);
-        return res.status(500).json({ error: "Internal server error" });
+      let data = await Users.map((user) => ({ user }));
+      try {
+        let insert = await userModel.bulkCreate(data);
+        return res.status(204).json(insert);
+      } catch (err) {
+        if (err.errors) {
+          console.log(err);
+          return res.status(400).json({ error: err.errors });
+        } else {
+          console.log(err);
+          return res.status(500).json({ error: "Internal server error" });
+        }
       }
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: "Server require content body" });
     }
   };
 

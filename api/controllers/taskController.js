@@ -6,36 +6,41 @@ const Op = Sequelize.Op;
 const taskController = () => {
   const register = async (req, res) => {
     const { tasks, user } = req.body;
-    const taskArr = await tasks.map((task) => ({ task }));
 
     try {
-      let findUser = await userModel.findOne({
-        where: {
-          user,
-        },
-        attributes: ["id"],
-      });
-
-      if (findUser) {
-        let userId = findUser.dataValues.id;
-
-        let data = taskArr.map((el) => {
-          return Object.assign({}, el, { UserId: userId });
-          return el;
+      const taskArr = await tasks.map((task) => ({ task }));
+      try {
+        let findUser = await userModel.findOne({
+          where: {
+            user,
+          },
+          attributes: ["id"],
         });
-        await taskModel.bulkCreate(data);
-        return res.status(204).json();
-      } else {
-        return res.status(412).json({ error: "User not Found" });
+
+        if (findUser) {
+          let userId = findUser.dataValues.id;
+
+          let data = taskArr.map((el) => {
+            return Object.assign({}, el, { UserId: userId });
+            return el;
+          });
+          await taskModel.bulkCreate(data);
+          return res.status(204).json();
+        } else {
+          return res.status(412).json({ error: "User not Found" });
+        }
+      } catch (err) {
+        if (err.errors) {
+          console.log(err);
+          return res.status(400).json({ error: err.errors });
+        } else {
+          console.log(err);
+          return res.status(500).json({ error: "Internal server error" });
+        }
       }
-    } catch (err) {
-      if (err.errors) {
-        console.log(err);
-        return res.status(400).json({ error: err.errors });
-      } else {
-        console.log(err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: "Server require content body" });
     }
   };
 
