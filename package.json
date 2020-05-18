@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "npm run nodemon",
-    "dev": "cross-env NODE_ENV=development node app.js",
+    "test": "cross-env NODE_ENV=development jest --testTimeout=10000",
+    "dev": "cross-env NODE_ENV=development node server.js",
     "nodemon": "nodemon --exec npm run dev",
     "production": "cross-env NODE_ENV=production node app.js"
   },
@@ -25,6 +26,14 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "nodemon": "^2.0.4"
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

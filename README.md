@@ -1,6 +1,6 @@
 # Express rest for orenda test
 
-> Express Rest API with MySQL, Sequelize ORM, and using async/await
+> Express Rest API with MySQL, Sequelize ORM, and using async/await. Testing with Jest and supertest.
 
 ## Installation
 
@@ -42,6 +42,12 @@ Rest API can be access from `localhost:2020`.
 It is bad practice to use such a port 2020, but it just for testing purpose anyway because i love the year 2020.
 
 ## Test API Requests
+
+### Automation test
+
+To test with Jest and supertest on this Rest API, you can run `npm test`.
+
+Make sure to create empty database table first or just run `npm start` to generate the table.
 
 #### User Stories 1 - Create Users
 
